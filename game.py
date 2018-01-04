@@ -6,6 +6,9 @@ from twisted.internet import (
     protocol, reactor, endpoints
 )
 
+from util import make24
+
+
 CARDS = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10,
          10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13]
 
@@ -31,19 +34,30 @@ class GameProtocol(protocol.Protocol):
     def dataReceived(self, data):
         sp = data.strip().split(' ')
         command = sp[0]
+        uk = self.transform_unique_key()
         if command == 'start':
-            uk = self.transform_unique_key()
             if uk not in CARD_RECORD:
                 cards = random.sample(CARDS, 4)
-                for i, c in enumerate(cards):
-                    cards[i] = str(c)
                 CARD_RECORD[uk] = cards
-            response = '{0}\n'.format(' '.join(CARD_RECORD[uk]))
+            cards = CARD_RECORD[uk][:]
+            for i, c in enumerate(cards):
+                cards[i] = str(c)
+            response = '{0}\n'.format(' '.join(cards))
         elif command == 'quit':
             response = 'Go to quit game.\n'
         elif command == 'commit':
-            solution = sp[1]
-            response = 'Your solution {0} is wrong.\n'.format(solution)
+            if uk not in CARD_RECORD:
+                response = 'Type command `start` to generate card numbers first.\n'
+            else:
+                solution = sp[1]
+                correct_answers = make24(CARD_RECORD[uk])
+                if solution in correct_answers:
+                    SCORE_RECORD[uk] += 1
+                    response = 'Congratulations.\n'
+                else:
+                    if SCORE_RECORD[uk] > 0:
+                        SCORE_RECORD[uk] -= 1
+                    response = 'Wrong solution.\n'
         else:
             response = 'Unknown command {0}.\n'.format(sp[0])
         self.transport.write(response)
