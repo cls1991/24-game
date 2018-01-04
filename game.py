@@ -8,9 +8,21 @@ from twisted.internet import (
 
 from util import make24
 
-
 CARDS = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10,
          10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13]
+
+HELP = """
+
+  Play 24 point game.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  start   Start the game.
+  commit  Commit your game solution.
+  quit    Quit the game.\n
+  """
 
 CONNECTIONS = []
 CARD_RECORD = {}
@@ -30,6 +42,8 @@ class GameProtocol(protocol.Protocol):
             SCORE_RECORD[uk] = 0
         if uk not in CONNECTIONS:
             CONNECTIONS.append(uk)
+
+        self.transport.write(HELP)
 
     def dataReceived(self, data):
         sp = data.strip().split(' ')
