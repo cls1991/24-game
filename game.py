@@ -1,8 +1,11 @@
 # coding: utf8
 
+import sys
+
 from twisted.internet import (
     protocol, reactor, endpoints
 )
+from twisted.python import log
 
 from util import (
     make24, generate_cards
@@ -47,6 +50,7 @@ class GameProtocol(protocol.Protocol):
             self.transport.write('Multi login is not allowed!\n')
             self.transport.loseConnection()
         else:
+            log.msg('Received connection from {0}'.format(hk))
             pk = self.transform_peer_key()
             CONNECTION[hk] = pk
             if hk not in SCORE_RECORD:
@@ -128,5 +132,6 @@ class GameFactory(protocol.Factory):
         return GameProtocol()
 
 
+log.startLogging(sys.stdout)
 endpoints.serverFromString(reactor, 'tcp:12345').listen(GameFactory())
 reactor.run()
