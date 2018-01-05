@@ -73,7 +73,7 @@ class GameProtocol(protocol.Protocol):
                 cards[i] = str(c)
             response = '{0}\n'.format(' '.join(cards))
         elif command == 'quit':
-            response = 'Go to quit game.\n'
+            response = 'Bye~\n'
         elif command == 'submit':
             if hk not in CARD_RECORD:
                 response = 'Type command `start` to generate card numbers first.\n'
@@ -93,7 +93,7 @@ class GameProtocol(protocol.Protocol):
                         else "You're wrong, no solutions!\n"
                 CARD_RECORD.pop(hk)
         elif command == 'rank':
-            s = sorted(SCORE_RECORD.values())
+            s = sorted(SCORE_RECORD.values(), reverse=True)
             for x in range(0, RANK_LENGTH - len(s)):
                 s.append(s[-1])
             scores = s[:RANK_LENGTH]

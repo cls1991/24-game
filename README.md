@@ -13,7 +13,7 @@ connect to game:
 start the game, give a random list consisted of four cards:
 
 	$ start
-	`8 10 2 5`
+	`13 1 7 3`
 
 guess whether these four cards can make up 24 points or not, and submit your guess:
 
@@ -48,7 +48,7 @@ quit the game:
 	Commands:
 	  start   Start the game.
 	  submit  Commit your guess(yes/y for solutions, others for no solutions).
-	  rank    Show the first three of score rank.
+	  rank    Show the first three of score ranks.
 	  info    Show player info.
 	  quit    Quit the game.
 	  help    Show this message.

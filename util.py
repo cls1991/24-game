@@ -24,7 +24,7 @@ OPERATIONS = '+-*/'
 
 def generate_cards(card_num=4):
     """Generate random cards for game."""
-    return random.sample(CARDS, 4)
+    return random.sample(CARDS, card_num)
 
 
 def make24(seq):
