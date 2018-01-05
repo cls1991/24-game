@@ -1,7 +1,7 @@
 # 24-game
 24 point game implemented in Python, just for fun!
 
-![https://asciinema.org/a/i4aAC6Fp3cnRL1zMqLULz3ynV](https://asciinema.org/a/i4aAC6Fp3cnRL1zMqLULz3ynV.png)
+[![asciicast](https://asciinema.org/a/i4aAC6Fp3cnRL1zMqLULz3ynV.png)](https://asciinema.org/a/i4aAC6Fp3cnRL1zMqLULz3ynV)
 
 ## Quickstart
 
