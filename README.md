@@ -15,7 +15,7 @@ start the game, give a random list consisted of four cards:
 	$ start
 	`8 10 2 5`
 
-guess whether these four cards make up 24 points or not, and submit your guess:
+guess whether these four cards can make up 24 points or not, and submit your guess:
 
 	$ submit yes
 	$ submit y
@@ -58,4 +58,8 @@ quit the game:
 I have deployed one instance to the public internet, you can visit at `106.75.56.232:12345`.
 
    
- 
+## TODO
+
+- A more beautiful ui.
+- Add pk mode.
+- Rank auto refresh.
