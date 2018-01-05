@@ -115,11 +115,11 @@ class GameProtocol(protocol.Protocol):
             pk = self.transform_peer_key()
             if CONNECTION[hk] == pk:
                 CONNECTION.pop(hk)
-            if hk in CARD_RECORD:
-                CARD_RECORD.pop(hk)
-                if hk in SCORE_RECORD:
-                    if SCORE_RECORD[hk] > 0:
-                        SCORE_RECORD[hk] -= 1
+                if hk in CARD_RECORD:
+                    CARD_RECORD.pop(hk)
+                    if hk in SCORE_RECORD:
+                        if SCORE_RECORD[hk] > 0:
+                            SCORE_RECORD[hk] -= 1
 
 
 class GameFactory(protocol.Factory):

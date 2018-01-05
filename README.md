@@ -57,7 +57,6 @@ quit the game:
 
 I have deployed one instance to the public internet, you can visit at `106.75.56.232:12345`.
 
-   
 ## TODO
 
 - A more beautiful ui.
