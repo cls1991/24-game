@@ -12,15 +12,13 @@ EXPRESSIONS = ('((%d %s %d) %s %d) %s %d',
                '(%d %s %d) %s (%d %s %d)',
                '(%d %s (%d %s %d)) %s %d',
                '%d %s ((%d %s %d) %s %d)',
-               '%d %s (%d %s (%d %s %d))'
-               )
+               '%d %s (%d %s (%d %s %d))')
 
 OPERATIONS = '+-*/'
 
 
 def make24(seq):
     """Make up 24 points with a sep consisted of 4 elements."""
-    result = []
 
     def check(ep):
         try:
@@ -36,54 +34,63 @@ def make24(seq):
             for p in EXPRESSIONS:
                 exp = p % (dt[0], op[0], dt[1], op[1], dt[2], op[2], dt[3])
                 if check(exp):
-                    result.append(exp)
+                    return exp
 
-    return list(set(result))
+    return ''
 
 
 class Stack:
-     def __init__(self):
-         self.items = []
+    def __init__(self):
+        self.items = []
 
-     def isEmpty(self):
-         return self.items == []
+    def empty(self):
+        return not self.items
 
-     def push(self, item):
-         self.items.append(item)
+    def push(self, item):
+        self.items.append(item)
 
-     def pop(self):
-         return self.items.pop()
+    def pop(self):
+        if not self.empty():
+            return self.items.pop()
+        return ''
 
-     def peek(self):
-         return self.items[len(self.items)-1]
+    def peek(self):
+        return self.items[-1]
 
-     def size(self):
-         return len(self.items)
+    def size(self):
+        return len(self.items)
 
 
-def infixToPostfix(infixexpr):
-    prec = {'*': 3, '/': 3, '+': 2, '-': 2, '(': 1}
-    opStack = Stack()
-    postfixList = []
-    tokenList = infixexpr.split()
+def infix2postfix(infix_expr):
+    """convert infix notation to postfix notation."""
+    priorities = {'*': 3, '/': 3, '+': 2, '-': 2, '(': 1}
+    op_stack = Stack()
+    postfix_list = []
 
-    for token in tokenList:
-        if token in token in '0123456789':
-            postfixList.append(token)
+    def greater(tk):
+        try:
+            priority_a = priorities[op_stack.peek()]
+            property_b = priorities[tk]
+            return True if priority_a > property_b else False
+        except KeyError:
+            return False
+
+    for token in infix_expr:
+        if token.isdigit():
+            postfix_list.append(token)
         elif token == '(':
-            opStack.push(token)
+            op_stack.push(token)
         elif token == ')':
-            topToken = opStack.pop()
-            while topToken != '(':
-                postfixList.append(topToken)
-                topToken = opStack.pop()
+            top_token = op_stack.pop()
+            while top_token and top_token != '(':
+                postfix_list.append(top_token)
+                top_token = op_stack.pop()
         else:
-            while (not opStack.isEmpty()) and \
-               (prec[opStack.peek()] >= prec[token]):
-                  postfixList.append(opStack.pop())
-            opStack.push(token)
+            while not op_stack.empty() and greater(token):
+                postfix_list.append(op_stack.pop())
+            op_stack.push(token)
 
-    while not opStack.isEmpty():
-        postfixList.append(opStack.pop())
-    return " ".join(postfixList)
+    while not op_stack.empty():
+        postfix_list.append(op_stack.pop())
 
+    return ' '.join(postfix_list)
