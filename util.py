@@ -4,9 +4,14 @@
     Algorithms and some other tools for `24 Game`.
 """
 
+import random
+
 from itertools import (
     permutations, product
 )
+
+CARDS = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10,
+         10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13]
 
 EXPRESSIONS = ('((%d %s %d) %s %d) %s %d',
                '(%d %s %d) %s (%d %s %d)',
@@ -15,6 +20,11 @@ EXPRESSIONS = ('((%d %s %d) %s %d) %s %d',
                '%d %s (%d %s (%d %s %d))')
 
 OPERATIONS = '+-*/'
+
+
+def generate_cards(card_num=4):
+    """Generate random cards for game."""
+    return random.sample(CARDS, 4)
 
 
 def make24(seq):
@@ -40,6 +50,8 @@ def make24(seq):
 
 
 class Stack:
+    """Stack implemented with list."""
+
     def __init__(self):
         self.items = []
 

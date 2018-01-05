@@ -1,15 +1,12 @@
 # coding: utf8
 
-import random
-
 from twisted.internet import (
     protocol, reactor, endpoints
 )
 
-from util import make24
-
-CARDS = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10,
-         10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13]
+from util import (
+    make24, generate_cards
+)
 
 RANK_LENGTH = 3
 
@@ -65,7 +62,7 @@ class GameProtocol(protocol.Protocol):
         hk = self.transform_host_key()
         if command == 'start':
             if hk not in CARD_RECORD:
-                cards = random.sample(CARDS, 4)
+                cards = generate_cards()
                 CARD_RECORD[hk] = cards
             cards = CARD_RECORD[hk][:]
             for i, c in enumerate(cards):
