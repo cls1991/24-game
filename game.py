@@ -19,7 +19,7 @@ HELP = """
 Commands:
   start   Start the game.
   submit  Commit your guess(yes/y for solutions, others for no solutions).
-  rank    Show score rank.
+  rank    Show the first three of score rank.
   info    Show player info.
   quit    Quit the game.
   help    Show this message.
@@ -100,7 +100,7 @@ class GameProtocol(protocol.Protocol):
                 scores[i] = str(c)
             response = 'Score ranks: {0}.\n'.format(' '.join(scores))
         elif command == 'info':
-            response = 'Your connection is {0}, score is {1}.\n'.format(CONNECTION[hk], SCORE_RECORD[hk])
+            response = 'Your connection is {0}, your score is {1}.\n'.format(CONNECTION[hk], SCORE_RECORD[hk])
         elif command == 'help':
             response = HELP
         else:
@@ -131,5 +131,5 @@ class GameFactory(protocol.Factory):
         return GameProtocol()
 
 
-endpoints.serverFromString(reactor, 'tcp:1234').listen(GameFactory())
+endpoints.serverFromString(reactor, 'tcp:12345').listen(GameFactory())
 reactor.run()
