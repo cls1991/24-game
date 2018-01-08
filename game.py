@@ -12,6 +12,7 @@ from util import (
 )
 
 RANK_LENGTH = 3
+DEFAULT_IP = '127.0.0.1'
 
 HELP = """
   Play 24 point game.
@@ -26,9 +27,10 @@ Commands:
 
 """
 
-CONNECTION = {}
+CONNECTIONS = {}
 CARD_RECORD = {}
 SCORE_RECORD = {}
+SCORE_RANKS = []
 
 
 class GameProtocol(protocol.Protocol):
@@ -46,13 +48,13 @@ class GameProtocol(protocol.Protocol):
 
     def connectionMade(self):
         hk = self.transform_host_key()
-        if hk in CONNECTION:
+        if hk in CONNECTIONS:
             self.transport.write('Multi login is not allowed!\n')
             self.transport.loseConnection()
         else:
             log.msg('Received connection from {0}'.format(hk))
             pk = self.transform_peer_key()
-            CONNECTION[hk] = pk
+            CONNECTIONS[hk] = pk
             if hk not in SCORE_RECORD:
                 SCORE_RECORD[hk] = 0
                 message = 'Welcome, type command `help` for more details.\n'
@@ -93,15 +95,22 @@ class GameProtocol(protocol.Protocol):
                         else "You're wrong, no solutions!\n"
                 CARD_RECORD.pop(hk)
         elif command == 'rank':
-            s = sorted(SCORE_RECORD.values(), reverse=True)
-            for x in range(0, RANK_LENGTH - len(s)):
-                s.append(s[-1])
-            scores = s[:RANK_LENGTH]
-            for i, c in enumerate(scores):
-                scores[i] = str(c)
+            scores = [str(s) for s in SCORE_RANKS]
             response = 'Score ranks: {0}.\n'.format(' '.join(scores))
         elif command == 'info':
-            response = 'Your connection is {0}, your score is {1}.\n'.format(CONNECTION[hk], SCORE_RECORD[hk])
+            response = 'Your connection is {0}, your score is {1}.\n'.format(CONNECTIONS[hk], SCORE_RECORD[hk])
+        elif command == 'GET':
+            if hk == DEFAULT_IP:
+                s = sorted(SCORE_RECORD.values(), reverse=True)
+                ll = RANK_LENGTH if len(s) > RANK_LENGTH else len(s)
+                for x in range(ll):
+                    SCORE_RANKS.append(s[x])
+                for x in range(RANK_LENGTH - ll):
+                    SCORE_RANKS.append(SCORE_RANKS[-1])
+                SCORE_RECORD.clear()
+                response = 'Successful refresh score ranks.\n'
+            else:
+                response = 'External invoke is not allowed!\n'
         elif command == 'help':
             response = HELP
         else:
@@ -112,15 +121,14 @@ class GameProtocol(protocol.Protocol):
 
     def connectionLost(self, reason=protocol.connectionDone):
         hk = self.transform_host_key()
-        if hk in CONNECTION:
+        if hk in CONNECTIONS:
             pk = self.transform_peer_key()
-            if CONNECTION[hk] == pk:
-                CONNECTION.pop(hk)
+            if CONNECTIONS[hk] == pk:
+                CONNECTIONS.pop(hk)
                 if hk in CARD_RECORD:
                     CARD_RECORD.pop(hk)
-                    if hk in SCORE_RECORD:
-                        if SCORE_RECORD[hk] > 0:
-                            SCORE_RECORD[hk] -= 1
+                    if hk in SCORE_RECORD and SCORE_RECORD[hk] > 0:
+                        SCORE_RECORD[hk] -= 1
 
 
 class GameFactory(protocol.Factory):

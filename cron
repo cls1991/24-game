@@ -1,0 +1,2 @@
+# refresh score ranks at 12:00 pm every night
+0 0 * * * curl --silent http://127.0.0.1:12345
