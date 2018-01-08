@@ -61,4 +61,4 @@ I have deployed one instance to the public internet, you can visit at `106.75.56
 
 - A more beautiful ui.
 - Add pk mode.
-- Wrap rank refresh as a cron task.
+- [x] Wrap rank refresh as a cron task.
